@@ -1,6 +1,8 @@
 'use strict';
 
-import React, { PropTypes } from 'react'
+import React, { PropTypes } from 'react';
+import { DragDropContext } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import {connect} from 'react-redux';
 import {loadTree} from './actions/treeAction';
 import Tree from './components/Tree';
@@ -27,7 +29,7 @@ class Main extends React.Component {
           renderNode={
             (node, state, paths, renderChildren) => {
               return (
-                <TreeNode node={node}>{renderChildren()}</TreeNode>
+                <TreeNode node={node} paths={paths}>{renderChildren()}</TreeNode>
               );
             }
           }
@@ -48,7 +50,6 @@ Main.propTypes = {
   loadTree:PropTypes.func,
 }
 
-
-export default connect(mapStateToProps,{loadTree})(Main);
+export default connect(mapStateToProps,{loadTree})(DragDropContext(HTML5Backend)(Main));
 
 // export default Main;

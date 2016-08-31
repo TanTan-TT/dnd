@@ -1,0 +1,30 @@
+@import "./fontcustom.less";
+.pop-tree-node-container {
+    > .tree-node {
+      cursor: pointer;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      height: 32px;
+
+        > .hasChild {
+          display: block;
+        }
+        > .hasNoChild {
+          display: none;
+        }
+
+      > .content {
+        margin-left: 5px;
+        flex: 1 1 auto;
+        display: flex;
+        overflow: hidden;
+      }
+    }
+    > .tree-children {
+      &.collapse {
+        display: none;
+      }
+    }
+
+}
