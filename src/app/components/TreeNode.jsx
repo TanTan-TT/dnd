@@ -22,7 +22,7 @@ export default class TreeNode extends React.Component {
     return (
       connectDragSource(
         <div className="pop-tree-node-container">
-          <div className='tree-node'
+          <div className="tree-node"
             style={{paddingLeft: 24+( this.props.paths.length - 1) * 11}}
           title={this.props.node.get("Name")}>
 
