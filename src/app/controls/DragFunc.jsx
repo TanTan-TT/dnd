@@ -2,8 +2,9 @@ export var source = {
   beginDrag: function (props) {
     console.log('beginDrag');
     // Return the data describing the dragged item
-    // var item = { id: props.id };
-    // return item;
+    var item = { id: props.node.get('Id') };
+    console.log('item',item);
+    return item;
   },
 };
 export function sourceCollect(connect, monitor) {

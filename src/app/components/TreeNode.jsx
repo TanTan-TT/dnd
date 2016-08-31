@@ -12,7 +12,6 @@ const Types = {
 
 @DragSource(Types.TREE,Func.source,Func.sourceCollect)
 @DropTarget(Types.TREE,Func.target,Func.targetCollect)
-
 export default class TreeNode extends React.Component {
   state = {
     collapsed:false

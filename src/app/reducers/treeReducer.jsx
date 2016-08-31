@@ -7,6 +7,7 @@ import {
   TREE_LOAD_REQUEST
   // WEATHER_LOAD_FAILURE
 } from '../actions/treeAction';
+import assign from 'object-assign';
 
 
 var defaultState = Immutable.fromJS({
@@ -14,8 +15,34 @@ var defaultState = Immutable.fromJS({
   data:null,
 });
 
+function getItem(data) {
+  return {
+    Id:data.Id,
+    Type:data.Type,
+    Name:data.Name
+  }
+}
+
+function map(data,fn) {
+  if(data){
+    return data.map(fn);
+  }
+  return [];
+}
+
+function rec(data) {
+  return assign(
+      getItem(data),
+      {
+        Children:map(data.Children,(item)=>{
+          return rec(item)
+        })
+      }
+    )
+}
+
 function getValidTreeData(data) {
-  return data;
+  return rec(data);
 }
 
 function updateData(state,action) {
