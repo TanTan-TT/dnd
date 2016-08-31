@@ -32,18 +32,22 @@ export default class TreeNode extends React.Component {
         <div className='tree-node'
           style={{paddingLeft: 24+( this.props.paths.length - 1) * 11}}
         title={this.props.node.get("Name")}>
-        <div {...collapsedProps}>
+
           <div className={classNames({
-              "hasChild"  : hasChild,
               "hasNoChild": !hasChild
             })}>
             <div className={classNames({
                 "fa icon-hierarchy-unfold": !this.state.collapsed,
-                "fa icon-hierarchy-fold"  : this.state.collapsed
-              })}/>
-            </div>
+                "fa icon-hierarchy-fold"  : this.state.collapsed,
+                })}
+                onClick={() => {
+                  this.setState({
+                    collapsed:!this.state.collapsed
+                  })
+                  }}/>
+
           </div>
-          <div className="content" title={this.props.node.get("Name")}>{this.props.node.get('Name')}</div>
+          {this.props.node.get('Name')}
         </div>
 
         <div className='tree-children'>
