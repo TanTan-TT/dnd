@@ -42,6 +42,12 @@ const Types = {
   }
 )
 export default class TreeNodeDropBar extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.isOverCurrent !== this.props.isOverCurrent){
+      return true;
+    }
+    return false;
+  }
   render () {
     const { isOverCurrent,connectDropTarget } = this.props;
     const { paths } = this.props;

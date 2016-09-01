@@ -73,6 +73,21 @@ export default class TreeNode extends React.Component {
     if(this.state.collapsed === false) return false;
     return true;
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.collapsed !== nextState.collapsed){
+      return true;
+    }
+    if(this.props.isDragging !== nextProps.isDragging){
+      return true;
+    }
+    if(this.props.canDrop !== nextProps.canDrop){
+      return true;
+    }
+    if(this.props.isTargetDragging !== nextProps.isTargetDragging){
+      return true;
+    }
+    return false;
+  }
   render () {
     const { connectDragSource,connectDropTarget,isDragging,canDrop,isTargetDragging } = this.props;
     // console.log('path',this.props.paths);
