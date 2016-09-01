@@ -1,3 +1,4 @@
+import {dragNode} from '../actions/treeAction'
 var currentNode = null;
 var currentNodeHoverTime = null;
 export var source = {
@@ -6,7 +7,8 @@ export var source = {
     // Return the data describing the dragged item
     var item = {
       id: props.node.get('Id'),
-      type: props.node.get('Type')
+      type: props.node.get('Type'),
+      path:props.paths
     };
     // console.log('item',item);
     return item;
@@ -22,7 +24,9 @@ export function sourceCollect(connect, monitor) {
     // to let React DnD handle the drag events:
     connectDragSource: connect.dragSource(),
     // You can ask the monitor about the current drag state:
-    isDragging: monitor.isDragging()
+    isDragging: monitor.isDragging(),
+    canExpand:currentNode!==null,
+    connectDragPreview: connect.dragPreview(),
   };
 }
 export var target = {
@@ -37,15 +41,15 @@ export var target = {
   },
   hover:(props,monitor,component)=>{
     // console.log('hover',props.node.get('Name'),monitor.getItem().id);
-    if(!monitor.isOver({ shallow: true }) 
+    if(!monitor.isOver({ shallow: true })
         || !component.canExpand()) return;
-    if(component !== currentNode){
+    if(component.props.node !== props.node){
       currentNode = component;
       currentNodeHoverTime = new Date().getTime();
     }
     else {
       let delta = new Date().getTime() - currentNodeHoverTime;
-      // console.log('delta',delta);
+      console.log('delta',delta);
       if(delta > 500){
         currentNode = null;
         currentNodeHoverTime = null;
@@ -53,7 +57,14 @@ export var target = {
       }
     }
   },
-  drop: function (props) {
+  drop: function (props,monitor) {
+    console.log('over__drop');
+    console.log(monitor.getItem().id);
+    console.log(props.node.get('Name'));
+    if(props.node.get('childrenNum')===0){
+      dragNode(monitor.getItem().id,props.node.get('Id'),null);
+    }
+
   }
 };
 export function targetCollect(connect, monitor) {
