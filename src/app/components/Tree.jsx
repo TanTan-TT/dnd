@@ -33,7 +33,7 @@ function map(data,renderNode) {
 
 class TreeNode extends Component {
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.data === nextProps.data;
+    return this.props.data !== nextProps.data;
   }
   render() {
     let {data, state, paths, childrenKeys, renderNode, mapTreeNodeChildren} = this.props;

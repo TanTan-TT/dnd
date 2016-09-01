@@ -4,7 +4,8 @@
 import React, { PropTypes } from 'react'
 import classNames from 'classnames';
 import { DropTarget} from 'react-dnd';
-import * as Func from '../controls/DragFunc.jsx';
+import {dragNode} from '../actions/treeAction'
+import {connect} from 'react-redux';
 
 const Types = {
   TREE: 'tree'
@@ -28,8 +29,17 @@ const Types = {
     hover:(props,monitor,component)=>{
       // console.log('hover',props.node.get('Name'),monitor.getItem().id);
     },
-    drop: function (props) {
-    }
+    drop: function (props,monitor,component) {
+      console.log('inset__drop');
+      console.log(monitor.getItem().id);
+      console.log(props.node.get('Name'));
+      console.log(props.before);
+      component.props.dragNode(
+        monitor.getItem(),{
+          id:props.node.get('ParentId'),
+          path:props.paths.slice(0,props.paths.length-2)},
+          props.before ? null : props.node.get('Id'));
+}
   },
   (connect, monitor) => {
     let canDrop = monitor.canDrop();
@@ -41,7 +51,7 @@ const Types = {
     };
   }
 )
-export default class TreeNodeDropBar extends React.Component {
+ class TreeNodeDropBar extends React.Component {
   render () {
     const { isOverCurrent,connectDropTarget } = this.props;
     const { paths } = this.props;
@@ -61,6 +71,15 @@ export default class TreeNodeDropBar extends React.Component {
 }
 
 TreeNodeDropBar.propTypes = {
-  show:PropTypes.bool,
+  node:PropTypes.object,
+  paths:PropTypes.array,
   before:PropTypes.bool,
 }
+
+function mapStateToProps(state) {
+  return {
+
+  };
+}
+
+export default connect(mapStateToProps,{dragNode})(TreeNodeDropBar);
