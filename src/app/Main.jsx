@@ -8,10 +8,14 @@ import {loadTree} from './actions/treeAction';
 import Tree from './components/Tree';
 import TreeNode from './components/TreeNode';
 
+import TreeScrollTarget from './components/TreeScrollTarget.jsx';
 
 const CHILDRENKEYS = ['Children'];
 
 class Main extends React.Component {
+  _onScroll(){
+    this._tree.scroll();
+  }
   componentDidMount() {
     this.props.loadTree();
   }
@@ -23,17 +27,18 @@ class Main extends React.Component {
     }
     else {
       return (
-        <Tree
-          childrenKeys={CHILDRENKEYS}
-          data={this.props.tree.get('data')}
-          renderNode={
-            (node, state, paths, renderChildren) => {
-              return (
-                <TreeNode node={node} paths={paths}>{renderChildren()}</TreeNode>
-              );
+          <Tree
+            ref={(tree)=>this._tree}
+            childrenKeys={CHILDRENKEYS}
+            data={this.props.tree.get('data')}
+            renderNode={
+              (node, state, paths, renderChildren) => {
+                return (
+                  <TreeNode node={node} paths={paths}>{renderChildren()}</TreeNode>
+                );
+              }
             }
-          }
-        />
+          />
       )
     }
   }
