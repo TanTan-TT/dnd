@@ -75,7 +75,7 @@ export default class TreeNode extends React.Component {
               title={this.props.node.get("Name")}>
             {this._getInsertBar('top',isFirst)}
             {this._getIcon()}
-            {this._getNodeName()}
+            {connectDropTarget(this._getNodeName())}
             {this._getInsertBar('bottom')}
           </div>
 
