@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { DragSource,DropTarget} from 'react-dnd';
 import * as Func from '../controls/DragFunc.jsx';
 import TreeNodeDropBar from './TreeNodeDropBar.jsx';
+import TreeNodePreview from './TreeNodePreview.jsx';
 
 const Types = {
   TREE: 'tree'
@@ -66,8 +67,7 @@ export default class TreeNode extends React.Component {
     if(this.state.collapsed){
       this.setState({collapsed:false});
     }
-
-  }
+    }
   canExpand(){
     if(this.props.node.get('Children').size === 0 ) return false;
     if(this.state.collapsed === false) return false;
@@ -89,7 +89,7 @@ export default class TreeNode extends React.Component {
     return false;
   }
   render () {
-    const { connectDragSource,connectDropTarget,isDragging,canDrop,isTargetDragging } = this.props;
+    const { connectDragSource,connectDropTarget,isDragging,canDrop,isTargetDragging,connectDragPreview,canExpand} = this.props;
     // console.log('path',this.props.paths);
     const isFirst = this.props.paths[this.props.paths.length-1] === 0;
     return (
@@ -107,7 +107,6 @@ export default class TreeNode extends React.Component {
 
           {this._getChildren()}
           {this.props.node.get('Children').size > 0 ? this._getInsertBar('bottom') : null}
-
         </div>
       )
 
@@ -121,7 +120,9 @@ TreeNode.propTypes = {
   children:PropTypes.object,
   isDragging:PropTypes.bool,
   canDrop:PropTypes.bool,
+  canExpand:PropTypes.bool,
   isTargetDragging:PropTypes.bool,
   connectDropTarget: PropTypes.func.isRequired,
-  connectDragSource: PropTypes.func.isRequired
+  connectDragSource: PropTypes.func.isRequired,
+  connectDragPreview: PropTypes.func.isRequired,
 };
