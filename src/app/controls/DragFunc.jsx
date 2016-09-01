@@ -1,3 +1,5 @@
+var currentNode = null;
+var currentNodeHoverTime = null;
 export var source = {
   beginDrag: function (props) {
     console.log('beginDrag');
@@ -9,6 +11,10 @@ export var source = {
     // console.log('item',item);
     return item;
   },
+  endDrag:()=>{
+    currentNode = null;
+    currentNodeHoverTime = null;
+  }
 };
 export function sourceCollect(connect, monitor) {
   return {
@@ -21,7 +27,6 @@ export function sourceCollect(connect, monitor) {
 }
 export var target = {
   canDrop:(props,monitor)=>{
-
     if(props.node.get('Id') === monitor.getItem().id){
       return false;
     }
@@ -29,22 +34,31 @@ export var target = {
       return false;
     }
     return true;
-
   },
   hover:(props,monitor,component)=>{
     // console.log('hover',props.node.get('Name'),monitor.getItem().id);
+    if(component !== currentNode){
+      currentNode = component;
+      currentNodeHoverTime = new Date().getTime();
+    }
+    else {
+      let delta = new Date().getTime() - currentNodeHoverTime;
+      // console.log('delta',delta);
+      if(delta > 500){
+        currentNode = null;
+        currentNodeHoverTime = null;
+        component.expand();
+      }
+    }
   },
   drop: function (props) {
   }
 };
 export function targetCollect(connect, monitor) {
   let canDrop = monitor.canDrop();
-  let isOverCurrent = monitor.isOver({shallow:true});
-  if(!canDrop && isOverCurrent) isOverCurrent = false;
   return {
     connectDropTarget: connect.dropTarget(),
     isTargetDragging:!!monitor.getItem(),
-    isOverCurrent,
     canDrop
   };
 }

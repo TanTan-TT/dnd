@@ -62,8 +62,14 @@ export default class TreeNode extends React.Component {
       </div>
     );
   }
+  expand(){
+    if(this.state.collapsed){
+      this.setState({collapsed:false});
+    }
+
+  }
   render () {
-    const { connectDragSource,connectDropTarget,isDragging,canDrop,isTargetDragging,isOverCurrent } = this.props;
+    const { connectDragSource,connectDropTarget,isDragging,canDrop,isTargetDragging } = this.props;
     // console.log('path',this.props.paths);
     const isFirst = this.props.paths[this.props.paths.length-1] === 0;
     return (
@@ -75,7 +81,7 @@ export default class TreeNode extends React.Component {
               title={this.props.node.get("Name")}>
             {this._getInsertBar('top',isFirst)}
             {this._getIcon()}
-            {this._getNodeName()}
+            {connectDropTarget(this._getNodeName())}
             {this._getInsertBar('bottom')}
           </div>
 
@@ -95,7 +101,7 @@ TreeNode.propTypes = {
   children:PropTypes.object,
   isDragging:PropTypes.bool,
   canDrop:PropTypes.bool,
-  isOverCurrent:PropTypes.bool,
+  isTargetDragging:PropTypes.bool,
   connectDropTarget: PropTypes.func.isRequired,
   connectDragSource: PropTypes.func.isRequired
 };
