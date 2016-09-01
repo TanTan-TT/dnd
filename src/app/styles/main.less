@@ -1,9 +1,45 @@
 @import "./fontcustom.less";
 .pop-tree-node-container {
+  position: relative;
 
   & .isDragging{
-    color: gray;
+    color: lightgray;
   }
+  .insertBar{
+    left: 0;
+    right: 0;
+    height: 9px;
+    position: absolute;
+    // z-index: 10;
+    display: flex;
+    flex-direction: column;
+    >div{
+      &.show{
+        display: flex;
+      }
+      display: none;
+      border-left: 1px solid green;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      >hr{
+        height: 1px;
+        margin: 0;
+        border: 0;
+        background-color: green;
+      }
+    }
+
+    &.before{
+      top:0;
+    }
+    &.after{
+      bottom: 0;
+    }
+
+
+  }
+
     > .tree-node {
       position: relative;
       cursor: pointer;
@@ -11,36 +47,12 @@
       flex-flow: row nowrap;
       align-items: center;
       height: 32px;
+      z-index: 9;
 
-      .insertBar{
-        &.show{
-          display: flex;
-        }
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 9px;
-        border-left: 1px solid green;
-        display: none;
-        flex-direction: column;
-        justify-content: center;
-        >hr{
-          height: 1px;
-          margin: 0;
-          border: 0;
-          background-color: green;
-        }
-      }
-      >span.canDrop{
-        color: green;
-      }
-      >span.cannotDrop{
+      &.cannotDrop{
         color: lightgray;
       }
-      >span.isOver{
-        color: blue;
-      }
+
         > .hasChild {
           display: block;
         }
@@ -56,7 +68,7 @@
       }
     }
     > .tree-children {
-
+      margin-left: 24px;
       &.collapsed {
         display: none;
       }

@@ -43,6 +43,7 @@ export function targetCollect(connect, monitor) {
   if(!canDrop && isOverCurrent) isOverCurrent = false;
   return {
     connectDropTarget: connect.dropTarget(),
+    isTargetDragging:!!monitor.getItem(),
     isOverCurrent,
     canDrop
   };
