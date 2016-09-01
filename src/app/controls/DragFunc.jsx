@@ -33,6 +33,12 @@ export var target = {
   },
   hover:(props,monitor,component)=>{
     // console.log('hover',props.node.get('Name'),monitor.getItem().id);
+    //console.log('hover');
+    if(monitor.isOver({ shallow: true }) && component.state.collapsed){
+      component.setState({
+        collapsed:false
+      })
+    }
   },
   drop: function (props) {
   }
