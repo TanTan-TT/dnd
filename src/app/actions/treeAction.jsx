@@ -16,12 +16,12 @@ export function loadTree(){
 
   }
 }
-export function dragNode(source,dest,preId){
+export function dragNode(source,destId,preId){
   return (dispatch, getState) => {
     return dispatch({
         type: DRAG_TREE_SUCCESS,
         source,
-        dest,
+        destId,
         preId,
     });
 

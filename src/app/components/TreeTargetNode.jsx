@@ -18,17 +18,23 @@ var currentNodeHoverTime = null;
 @DropTarget(Types.TREE,
   {
     canDrop:(props,monitor)=>{
+
       if(props.node.get('Id') === monitor.getItem().id){
+        // console.log(false);
         return false;
       }
       if(props.node.get('Type') > monitor.getItem().type){
+        // console.log(false);
         return false;
       }
-      console.log('canDrop');
       return true;
     },
     hover:(props,monitor,component)=>{
-      console.log('hover',props.node.get('Name'));
+      //console.log('hover',props.node.get('Name'));
+      // console.log(component.props.node.get('Name'));
+      // console.log('hover');
+      // console.log(props.node.get('Name'));
+
       if(!monitor.isOver({ shallow: true })
           || !component.canExpand()) return;
       if(component.props.node !== props.node){
@@ -36,8 +42,11 @@ var currentNodeHoverTime = null;
         currentNodeHoverTime = new Date().getTime();
       }
       else {
+        if(currentNodeHoverTime===null){
+          currentNodeHoverTime = new Date().getTime();
+          return;
+        }
         let delta = new Date().getTime() - currentNodeHoverTime;
-        console.log('delta',delta);
         if(delta > 500){
           currentNode = null;
           currentNodeHoverTime = null;
@@ -46,12 +55,12 @@ var currentNodeHoverTime = null;
       }
     },
     drop: (props,monitor) => {
-      console.log('over__drop');
-      console.log(monitor.getItem().id);
-      console.log(props.node.get('Name'));
-      if(props.node.get('childrenNum')===0){
-        props.dragNode(monitor.getItem().id,props.node.get('Id'),null);
-      }
+      // console.log('over__drop');
+      // console.log(monitor.getItem().id);
+      // console.log(props.node.get('Name'));
+
+        props.dragNode(monitor.getItem(),props.node.get('Id'),null);
+
 
     }
   },
@@ -65,24 +74,46 @@ var currentNodeHoverTime = null;
   }
 )
 class TreeTargetNode extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {twinkling:false};
+  }
   canExpand(){
     return this.props.canExpand();
   }
   expand(){
-    this.props.expand();
+    // console.log('expand');
+    this.setState({twinkling:true},()=>{
+      setTimeout(()=>{
+        this.props.expand();
+        this.setState({twinkling:false})
+      },500);
+
+      // this.setState({twinkling:false})
+    })
+
   }
   shouldComponentUpdate(nextProps, nextState) {
-    if(nextProps.isTargetDragging !== this.props.isTargetDragging &&
-        nextProps.canDrop !== this.props.canDrop){
-      return true;
+    if(nextProps.isTargetDragging === this.props.isTargetDragging &&
+        nextProps.canDrop === this.props.canDrop &&
+        this.state.twinkling === nextState.twinkling){
+
+      return false;
     }
 
-    return false;
+    return true;
   }
   render () {
     const {connectDropTarget,isTargetDragging,canDrop} = this.props;
+    // console.log('twinkling',this.state.twinkling);
     return connectDropTarget(
-      <span className={classNames({cannotDrop:(isTargetDragging && !canDrop)})}>{this.props.node.get('Name')}</span>
+      <span className={
+          classNames({
+            twinkling:this.state.twinkling,
+            cannotDrop:(isTargetDragging && !canDrop)
+          })}>
+          {this.props.node.get('Name')}
+      </span>
     )
   }
 }

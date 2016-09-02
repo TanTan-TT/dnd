@@ -3,6 +3,14 @@ html,body{
   height: 100%;
 
 }
+@keyframes twinkling{    /*透明度由0到1*/
+  0%{
+     background-color: white;
+   }
+  100%{
+     background-color: orange;
+  }
+}
 #dnd-tree{
   height:100%;
 }
@@ -60,11 +68,14 @@ html,body{
       display: flex;
       flex-flow: row nowrap;
       align-items: center;
-      height: 32px;
+      padding-top:  12px;
 
       >span{
         display: flex;
         flex:1;
+      }
+      >span.twinkling{
+        animation: twinkling 0.5s ease-in;
       }
       >span.cannotDrop{
         color: lightgray;
