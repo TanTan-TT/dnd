@@ -1,9 +1,10 @@
-import {dragNode} from '../actions/treeAction'
+'use strict';
+
 var currentNode = null;
 var currentNodeHoverTime = null;
 export var source = {
   beginDrag: function (props) {
-    console.log('beginDrag');
+    // console.log('beginDrag');
     // Return the data describing the dragged item
     var item = {
       id: props.node.get('Id'),
@@ -62,7 +63,7 @@ export var target = {
     console.log(monitor.getItem().id);
     console.log(props.node.get('Name'));
     if(props.node.get('childrenNum')===0){
-      dragNode(monitor.getItem().id,props.node.get('Id'),null);
+      props.dragNode(monitor.getItem().id,props.node.get('Id'),null);
     }
 
   }
