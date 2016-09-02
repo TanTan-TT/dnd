@@ -18,15 +18,15 @@ export default class TreeNode extends React.Component {
   state = {
     collapsed:false
   };
-  _getInsertBar(type,isFirst){
+  _getInsertBar(type,isLast){
     let before = null;
-    if(type === 'top'){
-      if(isFirst){
-        before = true;
+    if(type === 'bottom'){
+      if(isLast){
+        before = false;
       }
     }
-    else if(type === 'bottom') {
-      before = false;
+    else if(type === 'top') {
+      before = true;
     }
     if(before !== null){
       return (<TreeNodeDropBar paths={this.props.paths} node={this.props.node} before={before} />);
@@ -78,6 +78,9 @@ export default class TreeNode extends React.Component {
     return true;
   }
   shouldComponentUpdate(nextProps, nextState) {
+    if(this.props.node !== nextProps.node){
+      return true;
+    }
     if(this.state.collapsed !== nextState.collapsed){
       return true;
     }
@@ -88,24 +91,25 @@ export default class TreeNode extends React.Component {
     return false;
   }
   render () {
-    const { connectDragSource,isDragging,connectDragPreview,canExpand} = this.props;
+    const {node,connectDragSource,isDragging,connectDragPreview,canExpand} = this.props;
     // console.log('path',this.props.paths);
-    const isFirst = this.props.paths[this.props.paths.length-1] === 0;
+    //const isFirst = this.props.paths[this.props.paths.length-1] === 0;
+    const isLast = this.props.paths[this.props.paths.length-1] === node.get('ParentChildrenSum')-1;
     return (
       connectDragSource(
         <div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
               style={{zIndex:9+this.props.paths.length}}>
           <div className={classNames("tree-node")}
 
-              title={this.props.node.get("Name")}>
-            {this._getInsertBar('top',isFirst)}
+              title={node.get("Name")}>
+            {this._getInsertBar('top')}
             {this._getIcon()}
             {this._getNodeName()}
-            {this._getInsertBar('bottom')}
+            {this._getInsertBar('bottom',isLast)}
           </div>
 
           {this._getChildren()}
-          {this.props.node.get('Children').size > 0 ? this._getInsertBar('bottom') : null}
+          {node.get('Children').size > 0 ? this._getInsertBar('bottom',true) : null}
         </div>
       )
 

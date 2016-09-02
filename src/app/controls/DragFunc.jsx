@@ -9,7 +9,7 @@ export var source = {
     var item = {
       id: props.node.get('Id'),
       type: props.node.get('Type'),
-      path:props.paths
+      path: props.paths
     };
     // console.log('item',item);
     return item;
@@ -44,6 +44,7 @@ export var target = {
     // console.log('hover',props.node.get('Name'),monitor.getItem().id);
     if(!monitor.isOver({ shallow: true })
         || !component.canExpand()) return;
+
     if(component.props.node !== props.node){
       currentNode = component;
       currentNodeHoverTime = new Date().getTime();

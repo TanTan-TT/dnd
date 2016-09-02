@@ -30,15 +30,14 @@ const Types = {
       // console.log('hover',props.node.get('Name'),monitor.getItem().id);
     },
     drop: function (props,monitor,component) {
-      // console.log('inset__drop');
-      // console.log(monitor.getItem().id);
-      // console.log(props.node.get('Name'));
-      // console.log(props.before);
+      console.log('inset__drop');
+      console.log(monitor.getItem().id);
+      console.log(props.node.get('Name'));
+      console.log(props.before);
       component.props.dragNode(
-        monitor.getItem(),{
-          id:props.node.get('ParentId'),
-          path:props.paths.slice(0,props.paths.length-2)},
-          props.before ? null : props.node.get('Id'));
+        monitor.getItem(),
+        props.node.get('ParentId'),
+        props.before ? props.node.get('Id') : null);
         }
   },
   (connect, monitor) => {
