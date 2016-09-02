@@ -92,7 +92,9 @@ function moveNode(state,action){
   //first remove
   data=data.deleteIn(source.path);
   if(preId===null){
-    data=data.setIn(dest.path.concat('Children'),[sourceItem]);
+    var destItem=findNodeById(data,dest.id);
+    destItem=destItem.set('Children',destItem.get('Children').size>0?destItem.get('Children').unshift(sourceItem):[sourceItem]);
+    data=insertNode(data,destItem);
   }
   else {
     var destItem=findNodeById(data,dest.id),
