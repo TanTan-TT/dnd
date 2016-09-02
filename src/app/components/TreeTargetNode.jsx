@@ -24,11 +24,10 @@ var currentNodeHoverTime = null;
       if(props.node.get('Type') > monitor.getItem().type){
         return false;
       }
-      console.log('canDrop');
       return true;
     },
     hover:(props,monitor,component)=>{
-      console.log('hover',props.node.get('Name'));
+      //console.log('hover',props.node.get('Name'));
       if(!monitor.isOver({ shallow: true })
           || !component.canExpand()) return;
       if(component.props.node !== props.node){
@@ -37,8 +36,8 @@ var currentNodeHoverTime = null;
       }
       else {
         let delta = new Date().getTime() - currentNodeHoverTime;
-        console.log('delta',delta);
-        if(delta > 500){
+        // console.log('delta',delta);
+        if(delta > 1000){
           currentNode = null;
           currentNodeHoverTime = null;
           component.expand();
@@ -46,12 +45,12 @@ var currentNodeHoverTime = null;
       }
     },
     drop: (props,monitor) => {
-      console.log('over__drop');
-      console.log(monitor.getItem().id);
-      console.log(props.node.get('Name'));
-      if(props.node.get('childrenNum')===0){
-        props.dragNode(monitor.getItem().id,props.node.get('Id'),null);
-      }
+      // console.log('over__drop');
+      // console.log(monitor.getItem().id);
+      // console.log(props.node.get('Name'));
+
+        props.dragNode(monitor.getItem(),props.node.get('Id'),null);
+
 
     }
   },

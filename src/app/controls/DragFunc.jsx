@@ -9,7 +9,7 @@ export var source = {
     var item = {
       id: props.node.get('Id'),
       type: props.node.get('Type'),
-      path:props.paths
+      path: props.paths
     };
     // console.log('item',item);
     return item;

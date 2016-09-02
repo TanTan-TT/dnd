@@ -16,12 +16,12 @@ var defaultState = Immutable.fromJS({
   data:null,
 });
 
-function getItem(data) {
+function getItem(data,cSum) {
   return {
     Id:data.Id,
     Type:data.Type,
     Name:data.Name,
-    ChildrenNum:data.Children.length,
+    ParentChildrenSum:cSum,
     ParentId:data.ParentId
   }
 }
@@ -33,12 +33,12 @@ function map(data,fn) {
   return [];
 }
 
-function rec(data) {
+function rec(data,cSum) {
   return assign(
-      getItem(data),
+      getItem(data,cSum),
       {
         Children:map(data.Children,(item)=>{
-          return rec(item)
+          return rec(item,data.Children.length)
         })
       }
     )
@@ -85,23 +85,24 @@ function insertNode(data,destItem){
   return data
 }
 function moveNode(state,action){
-  var {source,dest,preId}=action,
+  var {source,destId,preId}=action,
       data=state.get('data'),
       sourceItem=data.getIn(source.path);
-  sourceItem=sourceItem.set('ParentId',dest.id);
+  sourceItem=sourceItem.set('ParentId',destId);
   //first remove
   data=data.deleteIn(source.path);
   if(preId===null){
-    var destItem=findNodeById(data,dest.id);
-    destItem=destItem.set('Children',destItem.get('Children').size>0?destItem.get('Children').unshift(sourceItem):[sourceItem]);
+    var destItem=findNodeById(data,destId);
+    sourceItem=sourceItem.set('ParentChildrenSum',1);
+    destItem=destItem.set('Children',destItem.get('Children').size>0?destItem.get('Children').push(sourceItem):Immutable.List([sourceItem]));
     data=insertNode(data,destItem);
   }
   else {
-    var destItem=findNodeById(data,dest.id),
+    var destItem=findNodeById(data,destId),
         preIndex=destItem.get('Children').findIndex(item=>item.get('Id')===preId),
-        preItems = destItem.get('Children').filter((item, i) => (i <= preIndex)),
-        afterItems = destItem.get('Children').filter((item, i) => (i > preIndex));
-
+        preItems = destItem.get('Children').filter((item, i) => (i < preIndex)),
+        afterItems = destItem.get('Children').filter((item, i) => (i >= preIndex));
+        sourceItem=sourceItem.set('ParentChildrenSum',destItem.get('Children').size+1);
         destItem=destItem.set('Children',preItems.push(sourceItem).concat(afterItems));
         data=insertNode(data,destItem);
   }
