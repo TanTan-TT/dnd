@@ -18,10 +18,13 @@ var currentNodeHoverTime = null;
 @DropTarget(Types.TREE,
   {
     canDrop:(props,monitor)=>{
+      return false;
       if(props.node.get('Id') === monitor.getItem().id){
+        console.log(false);
         return false;
       }
       if(props.node.get('Type') > monitor.getItem().type){
+        console.log(false);
         return false;
       }
       return true;
@@ -29,7 +32,9 @@ var currentNodeHoverTime = null;
     hover:(props,monitor,component)=>{
       //console.log('hover',props.node.get('Name'));
       // console.log(component.props.node.get('Name'));
-      //  console.log(props.node.get('Name'));
+      console.log('hover');
+      console.log(props.node.get('Name'));
+
       if(!monitor.isOver({ shallow: true })
           || !component.canExpand()) return;
       if(component.props.node !== props.node){
