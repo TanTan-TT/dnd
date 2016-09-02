@@ -5,7 +5,7 @@ import React, { PropTypes } from 'react'
 import {connect} from 'react-redux';
 import {dragNode} from '../actions/treeAction'
 import { DropTarget} from 'react-dnd';
-import * as Func from '../controls/DragFunc.jsx';
+// import * as Func from '../controls/DragFunc.jsx';
 import classNames from 'classnames';
 
 const Types = {
@@ -70,6 +70,14 @@ class TreeTargetNode extends React.Component {
   }
   expand(){
     this.props.expand();
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.isTargetDragging !== this.props.isTargetDragging &&
+        nextProps.canDrop !== this.props.canDrop){
+      return true;
+    }
+
+    return false;
   }
   render () {
     const {connectDropTarget,isTargetDragging,canDrop} = this.props;
