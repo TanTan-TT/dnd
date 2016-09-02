@@ -32,9 +32,15 @@ function map(data,renderNode) {
 }
 
 class TreeNode extends Component {
+	// componentWillReceiveProps(){
+	// 	console.log('componentWillReceiveProps');
+	// }
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.data !== nextProps.data;
   }
+	// componentWillMount(){
+	// 	console.log('componentWillMount');
+	// }
   render() {
     let {data, state, paths, childrenKeys, renderNode, mapTreeNodeChildren} = this.props;
     return renderNode(data, state, paths, () => {

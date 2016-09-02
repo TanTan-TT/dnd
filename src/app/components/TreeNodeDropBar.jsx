@@ -30,10 +30,6 @@ const Types = {
       // console.log('hover',props.node.get('Name'),monitor.getItem().id);
     },
     drop: function (props,monitor,component) {
-      console.log('inset__drop');
-      console.log(monitor.getItem().id);
-      console.log(props.node.get('Name'));
-      console.log(props.before);
       component.props.dragNode(
         monitor.getItem(),{
           id:props.node.get('ParentId'),
@@ -53,14 +49,14 @@ const Types = {
 )
  class TreeNodeDropBar extends React.Component {
   render () {
-    const { isOverCurrent,connectDropTarget } = this.props;
+    const { isOverCurrent,connectDropTarget,canDrop} = this.props;
     const { paths } = this.props;
     return (
       connectDropTarget(
         <div className={classNames('insertBar',{before:this.props.before,after:!this.props.before})}
               style={{zIndex:10+paths.length}}>
           <div className={
-              classNames({show:isOverCurrent})
+              classNames({show:isOverCurrent && canDrop})
             }>
             <hr />
           </div>
