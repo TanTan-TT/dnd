@@ -3,17 +3,17 @@
 
 import React, { PropTypes } from 'react';
 import classNames from 'classnames';
-import { DragSource,DropTarget} from 'react-dnd';
+import { DragSource} from 'react-dnd';
 import * as Func from '../controls/DragFunc.jsx';
 import TreeNodeDropBar from './TreeNodeDropBar.jsx';
 import TreeNodePreview from './TreeNodePreview.jsx';
+import TreeTargetNode from './TreeTargetNode';
 
 const Types = {
   TREE: 'tree'
 };
 
 @DragSource(Types.TREE,Func.source,Func.sourceCollect)
-@DropTarget(Types.TREE,Func.target,Func.targetCollect)
 export default class TreeNode extends React.Component {
   state = {
     collapsed:false
@@ -54,7 +54,11 @@ export default class TreeNode extends React.Component {
   _getNodeName(){
     // console.log('canDrop',canDrop);
     // console.log('isTargetDragging',isTargetDragging);
-    return (<span>{this.props.node.get('Name')}</span>)
+    return (
+      <TreeTargetNode
+        node={this.props.node}
+        expand={()=>this.expand()}
+        canExpand={()=>this.canExpand()} />)
   }
   _getChildren(){
     return (
@@ -67,26 +71,36 @@ export default class TreeNode extends React.Component {
     if(this.state.collapsed){
       this.setState({collapsed:false});
     }
-    }
+  }
   canExpand(){
     if(this.props.node.get('Children').size === 0 ) return false;
     if(this.state.collapsed === false) return false;
     return true;
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.collapsed !== nextState.collapsed){
+      return true;
+    }
+    if(this.props.isDragging !== nextProps.isDragging){
+      return true;
+    }
+
+    return false;
+  }
   render () {
-    const { connectDragSource,connectDropTarget,isDragging,canDrop,isTargetDragging,connectDragPreview,canExpand} = this.props;
+    const { connectDragSource,isDragging,connectDragPreview,canExpand} = this.props;
     // console.log('path',this.props.paths);
     const isFirst = this.props.paths[this.props.paths.length-1] === 0;
     return (
       connectDragSource(
         <div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
               style={{zIndex:9+this.props.paths.length}}>
-          <div className={classNames("tree-node",{cannotDrop:(isTargetDragging && !canDrop)})}
+          <div className={classNames("tree-node")}
 
               title={this.props.node.get("Name")}>
             {this._getInsertBar('top',isFirst)}
             {this._getIcon()}
-            {connectDropTarget(this._getNodeName())}
+            {this._getNodeName()}
             {this._getInsertBar('bottom')}
           </div>
 

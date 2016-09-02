@@ -8,7 +8,7 @@ import {loadTree} from './actions/treeAction';
 import Tree from './components/Tree';
 import TreeNode from './components/TreeNode';
 
-import TreeScrollTarget from './components/TreeScrollTarget.jsx';
+
 
 const CHILDRENKEYS = ['Children'];
 

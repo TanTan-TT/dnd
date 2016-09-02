@@ -30,12 +30,16 @@ const Types = {
       // console.log('hover',props.node.get('Name'),monitor.getItem().id);
     },
     drop: function (props,monitor,component) {
+      // console.log('inset__drop');
+      // console.log(monitor.getItem().id);
+      // console.log(props.node.get('Name'));
+      // console.log(props.before);
       component.props.dragNode(
         monitor.getItem(),{
           id:props.node.get('ParentId'),
           path:props.paths.slice(0,props.paths.length-2)},
           props.before ? null : props.node.get('Id'));
-}
+        }
   },
   (connect, monitor) => {
     let canDrop = monitor.canDrop();
@@ -47,7 +51,14 @@ const Types = {
     };
   }
 )
- class TreeNodeDropBar extends React.Component {
+
+export default class TreeNodeDropBar extends React.Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.isOverCurrent !== this.props.isOverCurrent){
+      return true;
+    }
+    return false;
+  }
   render () {
     const { isOverCurrent,connectDropTarget,canDrop} = this.props;
     const { paths } = this.props;
@@ -70,6 +81,7 @@ TreeNodeDropBar.propTypes = {
   node:PropTypes.object,
   paths:PropTypes.array,
   before:PropTypes.bool,
+  isOverCurrent:PropTypes.bool,
 }
 
 function mapStateToProps(state) {
