@@ -58,13 +58,7 @@ export var target = {
     }
   },
   drop: function (props,monitor) {
-    console.log('over__drop');
-    console.log(monitor.getItem().id);
-    console.log(props.node.get('Name'));
-    if(props.node.get('childrenNum')===0){
       dragNode(monitor.getItem().id,props.node.get('Id'),null);
-    }
-
   }
 };
 export function targetCollect(connect, monitor) {
