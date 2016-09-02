@@ -93,7 +93,7 @@ export default class TreeNode extends React.Component {
     const isFirst = this.props.paths[this.props.paths.length-1] === 0;
     return (
       connectDragSource(
-        <div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
+        (<div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
               style={{zIndex:9+this.props.paths.length}}>
           <div className={classNames("tree-node")}
 
@@ -106,7 +106,7 @@ export default class TreeNode extends React.Component {
 
           {this._getChildren()}
           {this.props.node.get('Children').size > 0 ? this._getInsertBar('bottom') : null}
-        </div>
+        </div>)
       )
 
     )

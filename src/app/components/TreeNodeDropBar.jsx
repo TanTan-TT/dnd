@@ -32,14 +32,11 @@ const Types = {
       // console.log(props.node.get('Name'));
       console.log("TreeNodeDropBar drop");
       component.props.dragNode(
-        monitor.getItem(),
-          {
-            id:props.node.get('ParentId'),
-            path:props.paths.slice(0,props.paths.length-2)
-          },
-          props.before ? null : props.node.get('Id')
-      );
-    }
+        monitor.getItem(),{
+          id:props.node.get('ParentId'),
+          path:props.paths.slice(0,props.paths.length-2)},
+          props.before ? null : props.node.get('Id'));
+        }
   },
   (connect, monitor) => {
     let canDrop = monitor.canDrop();
@@ -60,14 +57,14 @@ class TreeNodeDropBar extends React.Component {
     return false;
   }
   render () {
-    const { isOverCurrent,connectDropTarget } = this.props;
+    const { isOverCurrent,connectDropTarget,canDrop} = this.props;
     const { paths } = this.props;
     return (
       connectDropTarget(
         <div className={classNames('insertBar',{before:this.props.before,after:!this.props.before})}
               style={{zIndex:10+paths.length}}>
           <div className={
-              classNames({show:isOverCurrent})
+              classNames({show:isOverCurrent && canDrop})
             }>
             <hr />
           </div>
@@ -81,6 +78,7 @@ TreeNodeDropBar.propTypes = {
   node:PropTypes.object,
   paths:PropTypes.array,
   before:PropTypes.bool,
+  canDrop:PropTypes.bool,
   connectDropTarget:PropTypes.func,
   isOverCurrent:PropTypes.bool,
 }

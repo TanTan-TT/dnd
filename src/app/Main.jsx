@@ -13,16 +13,19 @@ import TreeNode from './components/TreeNode';
 const CHILDRENKEYS = ['Children'];
 
 class Main extends React.Component {
-  _onScroll(){
-    this._tree.scroll();
-  }
+
   componentDidMount() {
     this.props.loadTree();
+    // document.body.addEventListener('drop',()=>{console.log("dropdrop");})
   }
   render () {
-    if(this.props.tree.get('isFetching')){
+    if(false || this.props.tree.get('isFetching')){
       return (
-        <div>Tree will be rendered</div>
+        <div>
+          Tree will be rendered
+          <div style={{width:"100px",height:"100px",border:"1px solid black"}}>drag me</div>
+          <div ref="node" style={{display:'flex',position:'absolute',top:"200px",left:0,zIndex:12,width:"100px",height:"100px",backgroundColor:"orange"}}>container</div>
+        </div>
       )
     }
     else {
