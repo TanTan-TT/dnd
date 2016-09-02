@@ -44,6 +44,7 @@ export var target = {
     // console.log('hover',props.node.get('Name'),monitor.getItem().id);
     if(!monitor.isOver({ shallow: true })
         || !component.canExpand()) return;
+
     if(component.props.node !== props.node){
       currentNode = component;
       currentNodeHoverTime = new Date().getTime();

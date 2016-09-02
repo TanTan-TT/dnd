@@ -28,6 +28,8 @@ var currentNodeHoverTime = null;
     },
     hover:(props,monitor,component)=>{
       //console.log('hover',props.node.get('Name'));
+      // console.log(component.props.node.get('Name'));
+      //  console.log(props.node.get('Name'));
       if(!monitor.isOver({ shallow: true })
           || !component.canExpand()) return;
       if(component.props.node !== props.node){
@@ -35,9 +37,12 @@ var currentNodeHoverTime = null;
         currentNodeHoverTime = new Date().getTime();
       }
       else {
+        if(currentNodeHoverTime===null){
+          currentNodeHoverTime = new Date().getTime();
+          return;
+        }
         let delta = new Date().getTime() - currentNodeHoverTime;
-        // console.log('delta',delta);
-        if(delta > 1000){
+        if(delta > 500){
           currentNode = null;
           currentNodeHoverTime = null;
           component.expand();
