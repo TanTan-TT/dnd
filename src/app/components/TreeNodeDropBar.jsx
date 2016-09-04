@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { DropTarget} from 'react-dnd';
 import {dragNode} from '../actions/treeAction'
 import {connect} from 'react-redux';
+import * as tree from '../reducers/treeReducer';
 
 const Types = {
   TREE: 'tree'
@@ -17,23 +18,20 @@ const Types = {
     canDrop:(props,monitor)=>{
       // console.log('canDrop',props.node.get('Name'),monitor.getItem().id);
       // console.log('canDrop',props.node.get('Type'),monitor.getItem().type);
-      if(props.node.get('Id') === monitor.getItem().id){
-        return false;
-      }
-      if(props.node.get('Type') > monitor.getItem().type){
-        return false;
-      }
-      return true;
+     return monitor.getItem().isAsset?tree.canDropByType(props.node,monitor.getItem()):tree.canDropFromBox(props.node,monitor.getItem())
 
     },
     hover:(props,monitor,component)=>{
+      if(monitor.isOver({shallow:true}) && monitor.canDrop()){
+        component.isOverNode(false)
+      }
       // console.log('hover',props.node.get('Name'),monitor.getItem().id);
     },
     drop: function (props,monitor,component) {
-      console.log('inset__drop');
-      console.log(monitor.getItem().id);
-      console.log(props.node.get('Name'));
-      console.log(props.before);
+      // console.log('inset__drop');
+      // console.log(monitor.getItem().id);
+      // console.log(props.node.get('Name'));
+      // console.log(props.before);
       component.props.dragNode(
         monitor.getItem(),
         props.node.get('ParentId'),
@@ -52,6 +50,9 @@ const Types = {
 )
 
 export default class TreeNodeDropBar extends React.Component {
+  isOverNode(status){
+    this.props.isOverNode(status)
+  }
   shouldComponentUpdate(nextProps, nextState) {
     if(nextProps.isOverCurrent !== this.props.isOverCurrent){
       return true;
@@ -81,6 +82,7 @@ TreeNodeDropBar.propTypes = {
   paths:PropTypes.array,
   before:PropTypes.bool,
   isOverCurrent:PropTypes.bool,
+  isOverNode:PropTypes.func,
 }
 
 function mapStateToProps(state) {

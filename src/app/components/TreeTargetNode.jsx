@@ -7,7 +7,7 @@ import {dragNode} from '../actions/treeAction'
 import { DropTarget} from 'react-dnd';
 import * as Func from '../controls/DragFunc.jsx';
 import classNames from 'classnames';
-
+import * as tree from '../reducers/treeReducer';
 const Types = {
   TREE: 'tree'
 };
@@ -18,23 +18,14 @@ var currentNodeHoverTime = null;
 @DropTarget(Types.TREE,
   {
     canDrop:(props,monitor)=>{
-      return false;
-      if(props.node.get('Id') === monitor.getItem().id){
-        console.log(false);
-        return false;
-      }
-      if(props.node.get('Type') > monitor.getItem().type){
-        console.log(false);
-        return false;
-      }
-      return true;
+      return monitor.getItem().isAsset?tree.canDropByType(props.node,monitor.getItem()):tree.canDropFromBox(props.node,monitor.getItem())
     },
     hover:(props,monitor,component)=>{
       //console.log('hover',props.node.get('Name'));
       // console.log(component.props.node.get('Name'));
-      console.log('hover');
-      console.log(props.node.get('Name'));
-
+      if(monitor.isOver({ shallow: true })){
+        component.isOverNode(true);
+      }
       if(!monitor.isOver({ shallow: true })
           || !component.canExpand()) return;
       if(component.props.node !== props.node){
@@ -80,6 +71,9 @@ class TreeTargetNode extends React.Component {
   expand(){
     this.props.expand();
   }
+  isOverNode(status){
+    this.props.isOverNode(status)
+  }
   render () {
     const {connectDropTarget,isTargetDragging,canDrop} = this.props;
     return connectDropTarget(
@@ -92,6 +86,7 @@ TreeTargetNode.propTypes = {
   node:PropTypes.object,
   canExpand:PropTypes.func,
   expand:PropTypes.func,
+  isOverNode:PropTypes.func,
   isTargetDragging:PropTypes.bool,
   canDrop:PropTypes.bool,
   connectDropTarget: PropTypes.func.isRequired,
