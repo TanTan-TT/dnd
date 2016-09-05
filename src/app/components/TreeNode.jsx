@@ -4,6 +4,7 @@
 import React, { PropTypes } from 'react';
 import classNames from 'classnames';
 import { DragSource} from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import * as Func from '../controls/DragFunc.jsx';
 import TreeNodeDropBar from './TreeNodeDropBar.jsx';
 import TreeNodePreview from './TreeNodePreview.jsx';
@@ -109,34 +110,41 @@ export default class TreeNode extends React.Component {
 
     return false;
   }
+//   componentDidMount() {
+//   // Use empty image as a drag preview so browsers don't draw it
+//   // and we can draw whatever we want on the custom drag layer instead.
+//   this.props.connectDragPreview(getEmptyImage(), {
+//     // IE fallback: specify that we'd rather screenshot the node
+//     // when it already knows it's being dragged so we can hide it with CSS.
+//     captureDraggingState: true
+//   });
+// }
   render () {
-    const {node,connectDragSource,isDragging,connectDragPreview,canExpand} = this.props;
+    const {node,connectDragSource,isDragging,canExpand} = this.props;
     // console.log('path',this.props.paths);
     //const isFirst = this.props.paths[this.props.paths.length-1] === 0;
     const isLast = this.props.paths[this.props.paths.length-1] === node.get('ParentChildrenSum')-1;
     return (
         connectDragSource(
-          <div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
-                style={{zIndex:9+this.props.paths.length}} onClick={this.onClick}>
+            <div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
+                  style={{zIndex:9+this.props.paths.length}} onClick={this.onClick}>
 
-            <div className={classNames("tree-node")}
+              <div className={classNames("tree-node")}
 
-                title={node.get("Name")}>
-              {this._getInsertBar('top')}
-              {this._getIcon()}
-              {this._getNodeName()}
-              {this._getInsertBar('bottom',isLast)}
+                  title={node.get("Name")}>
+                {this._getInsertBar('top')}
+                {this._getIcon()}
+                {this._getNodeName()}
+                {this._getInsertBar('bottom',isLast)}
+              </div>
+
+              {this._getChildren()}
+              {node.get('Children').size > 0 ? this._getInsertBar('bottom',true) : null}
             </div>
 
-            {this._getChildren()}
-            {node.get('Children').size > 0 ? this._getInsertBar('bottom',true) : null}
-          </div>
 
     )
-
-
-
-    )
+    ) 
   }
 }
 
