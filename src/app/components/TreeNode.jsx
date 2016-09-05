@@ -15,8 +15,13 @@ const Types = {
 
 @DragSource(Types.TREE,Func.source,Func.sourceCollect)
 export default class TreeNode extends React.Component {
+  constructor(props){
+    super(props);
+    this.onClick=this.onClick.bind(this);
+  }
   state = {
-    collapsed:false
+    collapsed:false,
+    isOverNode:false,
   };
   _getInsertBar(type,isLast){
     let before = null;
@@ -29,7 +34,10 @@ export default class TreeNode extends React.Component {
       before = true;
     }
     if(before !== null){
-      return (<TreeNodeDropBar paths={this.props.paths} node={this.props.node} before={before} />);
+      return (<TreeNodeDropBar paths={this.props.paths}
+                               node={this.props.node}
+                               before={before}
+                               isOverNode={(status)=>this.isOverNode(status)}/>);
     }
     return null;
   }
@@ -42,10 +50,11 @@ export default class TreeNode extends React.Component {
               "fa icon-hierarchy-unfold": !this.state.collapsed,
               "fa icon-hierarchy-fold"  : this.state.collapsed,
             })}
-            onClick={() => {
+            onClick={(e) => {
               this.setState({
                 collapsed:!this.state.collapsed
             })
+            e.stopPropagation();
         }}/>
       );
     }
@@ -58,7 +67,8 @@ export default class TreeNode extends React.Component {
       <TreeTargetNode
         node={this.props.node}
         expand={()=>this.expand()}
-        canExpand={()=>this.canExpand()} />)
+        canExpand={()=>this.canExpand()}
+        isOverNode={(status)=>this.isOverNode(status)}/>)
   }
   _getChildren(){
     return (
@@ -76,6 +86,15 @@ export default class TreeNode extends React.Component {
     if(this.props.node.get('Children').size === 0 ) return false;
     if(this.state.collapsed === false) return false;
     return true;
+  }
+  isOverNode(status){
+      this.setState({
+        isOverNode:status
+      })
+      this.props.overNode(status,this.state.collapsed)
+  }
+  onClick(e){
+    e.stopPropagation();
   }
   shouldComponentUpdate(nextProps, nextState) {
     if(this.props.node !== nextProps.node){
@@ -96,23 +115,28 @@ export default class TreeNode extends React.Component {
     //const isFirst = this.props.paths[this.props.paths.length-1] === 0;
     const isLast = this.props.paths[this.props.paths.length-1] === node.get('ParentChildrenSum')-1;
     return (
-      connectDragSource(
-        (<div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
-              style={{zIndex:9+this.props.paths.length}}>
-          <div className={classNames("tree-node")}
+        connectDragSource(
+          <div className={classNames('pop-tree-node-container',{'isDragging':isDragging})}
+                style={{zIndex:9+this.props.paths.length}} onClick={this.onClick}>
 
-              title={node.get("Name")}>
-            {this._getInsertBar('top')}
-            {this._getIcon()}
-            {this._getNodeName()}
-            {this._getInsertBar('bottom',isLast)}
+            <div className={classNames("tree-node")}
+
+                title={node.get("Name")}>
+              {this._getInsertBar('top')}
+              {this._getIcon()}
+              {this._getNodeName()}
+              {this._getInsertBar('bottom',isLast)}
+            </div>
+
+            {this._getChildren()}
+            {node.get('Children').size > 0 ? this._getInsertBar('bottom',true) : null}
           </div>
 
-          {this._getChildren()}
-          {node.get('Children').size > 0 ? this._getInsertBar('bottom',true) : null}
-        </div>
-      )
-    ))
+    )
+
+
+
+    )
   }
 }
 
@@ -127,4 +151,5 @@ TreeNode.propTypes = {
   connectDropTarget: PropTypes.func.isRequired,
   connectDragSource: PropTypes.func.isRequired,
   connectDragPreview: PropTypes.func.isRequired,
+  overNode:PropTypes.func
 };

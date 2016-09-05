@@ -9,7 +9,8 @@ export var source = {
     var item = {
       id: props.node.get('Id'),
       type: props.node.get('Type'),
-      path: props.paths
+      path: props.paths,
+      isAsset:props.node.get('IsAsset'),
     };
     // console.log('item',item);
     return item;
@@ -28,52 +29,5 @@ export function sourceCollect(connect, monitor) {
     isDragging: monitor.isDragging(),
     canExpand:currentNode!==null,
     connectDragPreview: connect.dragPreview(),
-  };
-}
-export var target = {
-  canDrop:(props,monitor)=>{
-    if(props.node.get('Id') === monitor.getItem().id){
-      return false;
-    }
-    if(props.node.get('Type') > monitor.getItem().type){
-      return false;
-    }
-    return true;
-  },
-  hover:(props,monitor,component)=>{
-    // console.log('hover',props.node.get('Name'),monitor.getItem().id);
-    if(!monitor.isOver({ shallow: true })
-        || !component.canExpand()) return;
-
-    if(component.props.node !== props.node){
-      currentNode = component;
-      currentNodeHoverTime = new Date().getTime();
-    }
-    else {
-      let delta = new Date().getTime() - currentNodeHoverTime;
-      console.log('delta',delta);
-      if(delta > 500){
-        currentNode = null;
-        currentNodeHoverTime = null;
-        component.expand();
-      }
-    }
-  },
-  drop: function (props,monitor) {
-    console.log('over__drop');
-    console.log(monitor.getItem().id);
-    console.log(props.node.get('Name'));
-    if(props.node.get('childrenNum')===0){
-      props.dragNode(monitor.getItem().id,props.node.get('Id'),null);
-    }
-
-  }
-};
-export function targetCollect(connect, monitor) {
-  let canDrop = monitor.canDrop();
-  return {
-    connectDropTarget: connect.dropTarget(),
-    isTargetDragging:!!monitor.getItem(),
-    canDrop
   };
 }

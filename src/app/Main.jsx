@@ -7,13 +7,27 @@ import {connect} from 'react-redux';
 import {loadTree} from './actions/treeAction';
 import Tree from './components/Tree';
 import TreeNode from './components/TreeNode';
+import TreeNodePreview from './components/TreeNodePreview.jsx';
 
 
 
 const CHILDRENKEYS = ['Children'];
 
 class Main extends React.Component {
-
+  state = {
+    collapsed:false,
+    isOverNode:false,
+  };
+  constructor(props) {
+  super(props);
+  this.overNode = this.overNode.bind(this);
+}
+  overNode(isOverNode,collapsed){
+    this.setState({
+      isOverNode:isOverNode,
+      collapsed:collapsed
+    })
+  }
   componentDidMount() {
     this.props.loadTree();
     // document.body.addEventListener('drop',()=>{console.log("dropdrop");})
@@ -30,6 +44,8 @@ class Main extends React.Component {
     }
     else {
       return (
+        <div>
+          <TreeNodePreview {...this.state}/>
           <Tree
             ref={(tree)=>this._tree}
             childrenKeys={CHILDRENKEYS}
@@ -37,11 +53,14 @@ class Main extends React.Component {
             renderNode={
               (node, state, paths, renderChildren) => {
                 return (
-                  <TreeNode node={node} paths={paths}>{renderChildren()}</TreeNode>
+                  <TreeNode refs='TreeNode' node={node} paths={paths} overNode={this.overNode}>{renderChildren()}</TreeNode>
                 );
               }
             }
           />
+        </div>
+
+
       )
     }
   }
