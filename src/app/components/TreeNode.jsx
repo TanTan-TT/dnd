@@ -15,6 +15,10 @@ const Types = {
 
 @DragSource(Types.TREE,Func.source,Func.sourceCollect)
 export default class TreeNode extends React.Component {
+  constructor(props){
+    super(props);
+    this.onClick=this.onClick.bind(this);
+  }
   state = {
     collapsed:false,
     isOverNode:false,
@@ -89,8 +93,8 @@ export default class TreeNode extends React.Component {
       })
       this.props.overNode(status,this.state.collapsed)
   }
-  onClick(){
-    console.log('onClick');
+  onClick(e){
+    e.stopPropagation();
   }
   shouldComponentUpdate(nextProps, nextState) {
     if(this.props.node !== nextProps.node){
