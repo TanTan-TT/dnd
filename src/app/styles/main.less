@@ -3,6 +3,14 @@ html,body{
   height: 100%;
 
 }
+@keyframes twinkling{    /*透明度由0到1*/
+  0%{
+     background-color: white;
+   }
+  100%{
+     background-color: orange;
+  }
+}
 #dnd-tree{
   height:100%;
 }
@@ -10,19 +18,8 @@ html,body{
   overflow: auto;
   height: 100%;
 }
-// .tree{
-//   overflow: auto;
-//   height: 100%;
-// }
-.tree-scroll-holder{
-  height: 2px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: red;
 
-}
+
 .pop-tree-node-container {
   position: relative;
 
@@ -34,7 +31,8 @@ html,body{
     right: 0;
     height: 9px;
     position: absolute;
-    // z-index: 10;
+
+    // background-color: red;
     display: flex;
     flex-direction: column;
     >div{
@@ -70,11 +68,14 @@ html,body{
       display: flex;
       flex-flow: row nowrap;
       align-items: center;
-      height: 32px;
-      z-index: 9;
+      padding-top:  12px;
+
       >span{
         display: flex;
         flex:1;
+      }
+      >span.twinkling{
+        animation: twinkling 0.5s ease-in;
       }
       >span.cannotDrop{
         color: lightgray;

@@ -150,10 +150,10 @@ export function canDropByType(node,monitorItem){
         break;
     case nodeType.Room:
     case nodeType.Panel:
-        return monitorItem.type-type<=1
+        return monitorItem.type-type<=1 && monitorItem.type-type>=0
         break;
     case nodeType.Panel:
-        return monitorItem.type-type<=2
+        return monitorItem.type-type<=2 && monitorItem.type-type>=0
         break;
     default:
       // do nothing

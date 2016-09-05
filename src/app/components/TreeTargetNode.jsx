@@ -5,7 +5,7 @@ import React, { PropTypes } from 'react'
 import {connect} from 'react-redux';
 import {dragNode} from '../actions/treeAction'
 import { DropTarget} from 'react-dnd';
-import * as Func from '../controls/DragFunc.jsx';
+// import * as Func from '../controls/DragFunc.jsx';
 import classNames from 'classnames';
 import * as tree from '../reducers/treeReducer';
 const Types = {
@@ -65,19 +65,49 @@ var currentNodeHoverTime = null;
   }
 )
 class TreeTargetNode extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {twinkling:false};
+  }
   canExpand(){
     return this.props.canExpand();
   }
   expand(){
-    this.props.expand();
+    // console.log('expand');
+    this.setState({twinkling:true},()=>{
+      setTimeout(()=>{
+        this.props.expand();
+        this.setState({twinkling:false})
+      },500);
+
+      // this.setState({twinkling:false})
+    })
+
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.isTargetDragging === this.props.isTargetDragging &&
+        nextProps.canDrop === this.props.canDrop &&
+        this.state.twinkling === nextState.twinkling){
+
+      return false;
+    }
+
+    return true;
   }
   isOverNode(status){
     this.props.isOverNode(status)
   }
   render () {
     const {connectDropTarget,isTargetDragging,canDrop} = this.props;
+    // console.log('twinkling',this.state.twinkling);
     return connectDropTarget(
-      <span className={classNames({cannotDrop:(isTargetDragging && !canDrop)})}>{this.props.node.get('Name')}</span>
+      <span className={
+          classNames({
+            twinkling:this.state.twinkling,
+            cannotDrop:(isTargetDragging && !canDrop)
+          })}>
+          {this.props.node.get('Name')}
+      </span>
     )
   }
 }

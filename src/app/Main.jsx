@@ -22,9 +22,6 @@ class Main extends React.Component {
   super(props);
   this.overNode = this.overNode.bind(this);
 }
-  _onScroll(){
-    this._tree.scroll();
-  }
   overNode(isOverNode,collapsed){
     this.setState({
       isOverNode:isOverNode,
@@ -33,11 +30,16 @@ class Main extends React.Component {
   }
   componentDidMount() {
     this.props.loadTree();
+    // document.body.addEventListener('drop',()=>{console.log("dropdrop");})
   }
   render () {
-    if(this.props.tree.get('isFetching')){
+    if(false || this.props.tree.get('isFetching')){
       return (
-        <div>Tree will be rendered</div>
+        <div>
+          Tree will be rendered
+          <div style={{width:"100px",height:"100px",border:"1px solid black"}}>drag me</div>
+          <div ref="node" style={{display:'flex',position:'absolute',top:"200px",left:0,zIndex:12,width:"100px",height:"100px",backgroundColor:"orange"}}>container</div>
+        </div>
       )
     }
     else {

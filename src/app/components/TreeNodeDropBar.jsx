@@ -81,6 +81,8 @@ TreeNodeDropBar.propTypes = {
   node:PropTypes.object,
   paths:PropTypes.array,
   before:PropTypes.bool,
+  canDrop:PropTypes.bool,
+  connectDropTarget:PropTypes.func,
   isOverCurrent:PropTypes.bool,
   isOverNode:PropTypes.func,
 }
