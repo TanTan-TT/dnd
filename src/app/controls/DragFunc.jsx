@@ -9,6 +9,7 @@ export var source = {
     var item = {
       id: props.node.get('Id'),
       type: props.node.get('Type'),
+      name:props.node.get('Name'),
       path: props.paths,
       isAsset:props.node.get('IsAsset'),
     };
@@ -18,6 +19,13 @@ export var source = {
   endDrag:()=>{
     currentNode = null;
     currentNodeHoverTime = null;
+  },
+  canDrag(props){
+    //console.log(props.node.get('Type'));
+    if(props.node.get('Type')===-1){
+      return false
+    }
+    return true
   }
 };
 export function sourceCollect(connect, monitor) {

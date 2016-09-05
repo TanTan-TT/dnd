@@ -10,29 +10,37 @@ const layerStyles = {
   width: '100%',
   height: '100%'
 };
+function getItemStyles(props) {
+  const { initialOffset, currentOffset } = props;
+  if (!initialOffset || !currentOffset) {
+    return {
+      display: 'none'
+    };
+  }
 
+  let { x, y } = currentOffset;
+
+
+  const transform = `translate(${x}px, ${y}px)`;
+  return {
+    transform: transform,
+    WebkitTransform: transform
+  };
+}
 @DragLayer(monitor => ({
   item: monitor.getItem(),
   itemType: monitor.getItemType(),
   isDragging: monitor.isDragging(),
   currentOffset: monitor.getSourceClientOffset(),
+  initialOffset: monitor.getInitialSourceClientOffset(),
 }))
 export default class TreeNodePreview extends React.Component {
   render () {
-    const { item,itemType,isDragging,currentOffset} = this.props;
+    const {isDragging,currentOffset} = this.props;
 if (!isDragging || !currentOffset) {
   return null;
 }else {
-  var layerStyles = {
-    position: 'fixed',
-    pointerEvents: 'none',
-    zIndex: 100,
-    left: currentOffset.x,
-    top: currentOffset.y,
-    width: '100%',
-    height: '100%',
-    color:'red'
-  };
+
   var iconClass;
   if(!this.props.isOverNode){
     iconClass='icon-column-fold'
@@ -41,7 +49,9 @@ if (!isDragging || !currentOffset) {
     iconClass='icon-hierarchy-fold'
   }
   return (
-    <div style={layerStyles} className={iconClass}/>
+    <div style={layerStyles}>
+      <div style={getItemStyles(this.props)} className={iconClass}/>
+    </div>
   );
 }
 
@@ -51,8 +61,12 @@ if (!isDragging || !currentOffset) {
 
 TreeNodePreview.propTypes = {
   item: PropTypes.object,
-itemType: PropTypes.string,
-    currentOffset: PropTypes.shape({
+  itemType: PropTypes.string,
+  initialOffset: PropTypes.shape({
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired
+}),
+  currentOffset: PropTypes.shape({
       x: PropTypes.number.isRequired,
       y: PropTypes.number.isRequired
     }),
